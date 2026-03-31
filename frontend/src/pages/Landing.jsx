@@ -1,13 +1,26 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle, Shield, Zap, ArrowRight, Vote as VoteIcon } from 'lucide-react';
+import { 
+  CheckCircle, 
+  Shield, 
+  Zap, 
+  ArrowRight, 
+  Vote as VoteIcon
+} from 'lucide-react';
+import { 
+  GitHubLogoIcon, 
+  TwitterLogoIcon, 
+  InstagramLogoIcon, 
+  EnvelopeClosedIcon 
+} from '@radix-ui/react-icons';
+import { Footer } from '@/components/ui/footer';
 
 export default function Landing() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col space-y-24 pb-20">
+    <div className="flex flex-col space-y-24">
       {/* Hero Section */}
       <section className="relative pt-20 pb-12 md:pt-32 md:pb-24 overflow-hidden">
         {/* Decorative Blobs */}
@@ -16,19 +29,6 @@ export default function Landing() {
         <div className="absolute -bottom-8 left-20 w-72 h-72 bg-white/5 rounded-full mix-blend-screen filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
 
         <div className="relative text-center space-y-8 max-w-4xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-400 text-sm font-medium backdrop-blur-sm"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/40 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-            </span>
-            <span>Version 1.0 is now live</span>
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -127,6 +127,94 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {/* CTA Section */}
+      <section className="max-w-7xl mx-auto px-4 w-full py-12">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="glass-card p-12 md:p-28 relative overflow-hidden group border-white/20"
+        >
+          {/* Background effects */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent pointer-events-none group-hover:opacity-60 transition-opacity duration-700" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 group-hover:bg-white/[0.07] transition-all duration-700" />
+          
+          <div className="relative z-10 flex flex-col items-center text-center space-y-10">
+            <div className="space-y-4">
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] max-w-4xl mx-auto">
+                Join the future of <br />
+                <span className="italic bg-gradient-to-r from-white via-slate-300 to-slate-500 bg-clip-text text-transparent opacity-90 drop-shadow-sm">
+                  Decentralized Decision Making
+                </span>
+              </h2>
+              <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
+                Experience unparalleled security and transparency. Start your first poll or auction in less than a minute.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-6 pt-6">
+              <button
+                onClick={() => navigate('/register')}
+                className="glass-button text-xl px-12 py-5 flex items-center space-x-3 group/btn"
+              >
+                <span>Launch Your Project</span>
+                <ArrowRight size={22} className="group-hover/btn:translate-x-1 transition-transform" />
+              </button>
+              <Link
+                to="/login"
+                className="px-8 py-5 border border-white/10 rounded-xl hover:bg-white/5 transition-all text-lg font-medium backdrop-blur-sm flex items-center justify-center min-w-[200px]"
+              >
+                Sign In
+              </Link>
+            </div>
+            
+          </div>
+        </motion.div>
+      </section>
+
+      <Footer
+        logo={<VoteIcon className="h-6 w-6 text-white" />}
+        brandName="VoteHub"
+        socialLinks={[
+          {
+            icon: <TwitterLogoIcon className="h-5 w-5" />,
+            href: "https://twitter.com/votehub",
+            label: "Twitter",
+          },
+          {
+            icon: <GitHubLogoIcon className="h-5 w-5" />,
+            href: "https://github.com/votehub/core",
+            label: "GitHub",
+          },
+          {
+            icon: <InstagramLogoIcon className="h-5 w-5" />,
+            href: "https://instagram.com/votehub",
+            label: "Instagram",
+          },
+          {
+            icon: <EnvelopeClosedIcon className="h-5 w-5" />,
+            href: "mailto:support@votehub.io",
+            label: "Email",
+          },
+        ]}
+        mainLinks={[
+          { href: "/polls", label: "Browse Polls" },
+          { href: "/auctions", label: "eAuctions" },
+          { href: "/contact", label: "Contact Page" },
+          { href: "/community", label: "Communities" },
+        ]}
+        legalLinks={[
+          { href: "/privacy", label: "Privacy Policy" },
+          { href: "/terms", label: "Terms of Service" },
+          { href: "/cookies", label: "Cookie Policy" },
+        ]}
+        copyright={{
+          text: `© ${new Date().getFullYear()} VoteHub Ecosystem`,
+          license: "Licensed under ISC Premium",
+        }}
+      />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import CreatePoll from './pages/CreatePoll'
 import Landing from './pages/Landing'
 import AuthSuccess from './pages/AuthSuccess'
 import EAuction from './pages/EAuction'
+import Contact from './pages/Contact'
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth()
@@ -26,6 +27,7 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/auth-success" element={<AuthSuccess />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />

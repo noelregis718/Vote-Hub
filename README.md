@@ -71,21 +71,21 @@ VoteHub follows a **Premium Monochrome** design system:
    PORT=5000
    ```
 
-2. **Initialize Database**:
+2. **Install & Launch Everything**:
+   Run the following in the root directory:
    ```bash
-   cd backend
-   npm install
-   npx prisma migrate dev --name init
-   npx prisma generate
+   npm run install:all
    npm run dev
    ```
 
-3. **Launch Frontend**:
-   ```bash
-   cd ../frontend
-   npm install
-   npm run dev
-   ```
+---
+
+### Available Scripts
+
+- `npm run dev`: Starts both frontend and backend concurrently.
+- `npm run install:all`: Installs all dependencies for root, backend, and frontend.
+- `npm run db:generate`: Runs Prisma generate in the backend.
+- `npm run db:migrate`: Runs Prisma migrations in the backend.
 
 ---
 
