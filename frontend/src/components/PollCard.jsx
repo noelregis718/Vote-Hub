@@ -68,7 +68,7 @@ export function PollCard({ poll, onVoteSuccess, onEdit, onDelete, onShare }) {
             >
               <Share2 size={14} />
             </button>
-            <span className="bg-white/10 text-white text-[10px] font-bold px-2 py-1 rounded-full border border-white/20 uppercase whitespace-nowrap">
+            <span className="bg-white/10 text-white text-sm font-bold px-4 py-1.5 rounded-full border border-white/20 whitespace-nowrap">
               Active
             </span>
           </div>
@@ -78,15 +78,15 @@ export function PollCard({ poll, onVoteSuccess, onEdit, onDelete, onShare }) {
           {poll.description}
         </p>
 
-        <div className="flex items-center space-x-4 text-xs text-slate-500">
+        <div className="flex items-center space-x-4 text-base text-slate-500">
           <div className="flex items-center space-x-1">
-            <Users size={14} />
-            <span>{totalVotes} votes</span>
+            <Users size={16} />
+            <span>{totalVotes} Votes</span>
           </div>
           {poll.endsAt && (
             <div className="flex items-center space-x-1">
-              <Calendar size={14} />
-              <span>Ends {new Date(poll.endsAt).toLocaleDateString()}</span>
+              <Calendar size={16} />
+              <span>Ends on {new Date(poll.endsAt).toLocaleDateString()}</span>
             </div>
           )}
         </div>

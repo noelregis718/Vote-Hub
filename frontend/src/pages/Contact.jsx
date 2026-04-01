@@ -77,9 +77,9 @@ export default function Contact() {
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="space-y-12"
+            className="space-y-16 lg:h-full flex flex-col justify-between"
           >
-            <div className="space-y-6">
+            <div className="space-y-8">
               <h1 className="text-5xl md:text-7xl font-black tracking-tight text-white leading-tight">
                 Let's build <br />
                 <span className="italic bg-gradient-to-r from-white via-slate-400 to-slate-600 bg-clip-text text-transparent">
@@ -91,19 +91,32 @@ export default function Contact() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ring-1 ring-white/5 p-8 rounded-3xl bg-white/[0.02] backdrop-blur-3xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 gap-y-10 ring-1 ring-white/5 p-10 md:p-11 rounded-[2rem] bg-white/[0.02] backdrop-blur-3xl mt-auto">
               {[
-                { icon: <Mail className="text-white" size={20} />, label: "Email Us", val: "support@votehub.io" },
-                { icon: <Phone className="text-white" size={20} />, label: "Call Us", val: "+1 (555) 123-4567" },
-                { icon: <MapPin className="text-white" size={20} />, label: "Visit Us", val: "San Francisco, CA" },
-                { icon: <Clock className="text-white" size={20} />, label: "Support Hours", val: "24/7 Priority" },
+                { icon: <Mail className="text-white" size={20} />, label: "Email Us", val: "noel.regis04@gmail.com", href: "mailto:noel.regis04@gmail.com" },
+                { icon: <Phone className="text-white" size={20} />, label: "Call Us", val: "7319546900", href: "tel:7319546900" },
+                { icon: <MapPin className="text-white" size={20} />, label: "Visit Us", val: "Asansol, West Bengal", href: "https://www.google.com/maps/search/?api=1&query=Asansol,West+Bengal" },
+                { icon: <Clock className="text-white" size={20} />, label: "Support Hours", val: "24/7 Priority", href: null },
               ].map((item, i) => (
-                <div key={i} className="space-y-2">
-                  <div className="flex items-center space-x-3 text-slate-500">
-                    {item.icon}
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{item.label}</span>
+                <div key={i} className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-white/10 transition-colors">
+                      {item.icon}
+                    </div>
+                    <span className="text-sm font-bold text-slate-300">{item.label}</span>
                   </div>
-                  <p className="text-white font-medium">{item.val}</p>
+                  {item.href ? (
+                    <a 
+                      href={item.href} 
+                      target={item.href.startsWith('http') ? "_blank" : undefined}
+                      rel={item.href.startsWith('http') ? "noopener noreferrer" : undefined}
+                      className="text-white font-medium hover:text-slate-300 transition-colors block pl-1"
+                    >
+                      {item.val}
+                    </a>
+                  ) : (
+                    <p className="text-white font-medium pl-1">{item.val}</p>
+                  )}
                 </div>
               ))}
             </div>
@@ -126,8 +139,8 @@ export default function Contact() {
                     </div>
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">First Name</label>
+                    <div className="flex flex-col gap-4">
+                      <label className="text-sm font-bold text-slate-300 ml-1">First Name</label>
                       <input 
                         type="text" 
                         name="firstName"
@@ -138,8 +151,8 @@ export default function Contact() {
                         placeholder="Jane"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Last Name</label>
+                    <div className="flex flex-col gap-4">
+                      <label className="text-sm font-bold text-slate-300 ml-1">Last Name</label>
                       <input 
                         type="text" 
                         name="lastName"
@@ -152,8 +165,8 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Work Email</label>
+                  <div className="flex flex-col gap-4">
+                    <label className="text-sm font-bold text-slate-300 ml-1">Work Email</label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={18} />
                       <input 
@@ -168,8 +181,8 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Message</label>
+                  <div className="flex flex-col gap-4">
+                    <label className="text-sm font-bold text-slate-300 ml-1">Message</label>
                     <div className="relative">
                       <MessageSquare className="absolute left-4 top-5 text-slate-600" size={18} />
                       <textarea 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { PollCard } from '../components/PollCard';
-import { Loader2, RefreshCcw, X, Plus, Trash2, Calendar as CalendarIcon } from 'lucide-react';
+import { Loader2, RefreshCcw, X, Plus, Trash2, Calendar as CalendarIcon, Activity, Users, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { DropdownMultiCalendar } from '../components/ui/dropdown-multi-calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
@@ -97,6 +97,13 @@ export default function Dashboard() {
     fetchPolls();
   }, []);
 
+  const stats = [
+    { label: 'Total polls', value: polls.length, icon: <Plus size={20} />, color: 'text-blue-400' },
+    { label: 'Votes cast', value: polls.reduce((acc, p) => acc + (p._count?.votes || 0), 0), icon: <Users size={20} />, color: 'text-green-400' },
+    { label: 'Active now', value: polls.filter(p => !p.endsAt || new Date(p.endsAt) > new Date()).length, icon: <Activity size={20} />, color: 'text-orange-400' },
+    { label: 'Completed', value: polls.filter(p => p.endsAt && new Date(p.endsAt) <= new Date()).length, icon: <CheckCircle size={20} />, color: 'text-slate-400' }
+  ];
+
   const displayedPolls = polls.filter(p => {
     const urlParams = new URLSearchParams(window.location.search);
     const pollId = urlParams.get('pollId');
@@ -116,22 +123,25 @@ export default function Dashboard() {
         </div>
         <div className="flex items-center space-x-2">
           {new URLSearchParams(window.location.search).get('pollId') && (
-            <button 
+            <button
               onClick={() => window.history.replaceState({}, '', '/dashboard')}
               className="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-white mr-4"
             >
               Show All Polls
             </button>
           )}
-          <button 
-            onClick={fetchPolls}
-            className="p-2.5 rounded-lg border border-white/10 hover:bg-white/5 transition-all text-slate-400 hover:text-white"
-            title="Refresh Polls"
-          >
-            <RefreshCcw size={20} />
-          </button>
         </div>
       </header>
+
+      {/* KPI Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, idx) => (
+          <div key={idx} className="glass-card p-5 border-white/5 hover:border-white/10 transition-all group h-28 flex flex-col justify-between">
+            <p className="text-sm font-semibold text-slate-400 font-sans">{stat.label}</p>
+            <h3 className="text-3xl font-black text-white leading-none">{stat.value}</h3>
+          </div>
+        ))}
+      </div>
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-24 space-y-4">
@@ -151,10 +161,10 @@ export default function Dashboard() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedPolls.map((poll) => (
-            <PollCard 
-              key={poll.id} 
-              poll={poll} 
-              onVoteSuccess={fetchPolls} 
+            <PollCard
+              key={poll.id}
+              poll={poll}
+              onVoteSuccess={fetchPolls}
               onEdit={openEditModal}
               onDelete={handleDeletePoll}
               onShare={(p) => setSharePoll(p)}
@@ -164,7 +174,7 @@ export default function Dashboard() {
       )}
 
       {/* Share Modal */}
-      <ShareModal 
+      <ShareModal
         isOpen={!!sharePoll}
         onClose={() => setSharePoll(null)}
         title={sharePoll?.title}
@@ -194,7 +204,7 @@ export default function Dashboard() {
                   type="text"
                   required
                   value={editData.title}
-                  onChange={(e) => setEditData({...editData, title: e.target.value})}
+                  onChange={(e) => setEditData({ ...editData, title: e.target.value })}
                   className="glass-input h-12 px-4 w-full text-sm text-white"
                   placeholder="e.g., Best UI Framework 2026"
                 />
@@ -204,7 +214,7 @@ export default function Dashboard() {
                 <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Description</label>
                 <textarea
                   value={editData.description}
-                  onChange={(e) => setEditData({...editData, description: e.target.value})}
+                  onChange={(e) => setEditData({ ...editData, description: e.target.value })}
                   className="glass-input p-4 w-full text-sm text-white min-h-[100px] resize-none"
                   placeholder="Provide context for the voters..."
                 />
@@ -213,8 +223,8 @@ export default function Dashboard() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Candidates</label>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={handleAddCandidate}
                     className="text-[10px] font-bold uppercase tracking-widest text-slate-300 hover:text-white flex items-center space-x-1"
                   >
@@ -234,8 +244,8 @@ export default function Dashboard() {
                         placeholder={`Candidate ${idx + 1}`}
                       />
                       {editData.candidates.length > 2 && (
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           onClick={() => handleRemoveCandidate(idx)}
                           className="p-3 text-slate-500 hover:text-red-400 transition-colors"
                         >
@@ -259,7 +269,7 @@ export default function Dashboard() {
                     </div>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" side="bottom" align="start">
-                    <DropdownMultiCalendar 
+                    <DropdownMultiCalendar
                       initialDate={editData.endsAt}
                       onConfirm={(dates) => {
                         if (dates.length > 0) {

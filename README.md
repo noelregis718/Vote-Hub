@@ -15,12 +15,14 @@ VoteHub is a high-fidelity, secure, and aesthetically stunning platform designed
 ### 🗳️ Secure Voting & Polls
 - **🛡️ Integrity First**: JWT-based session management and bcrypt password hashing ensure every vote counts and is secure.
 - **📊 Real-time Analytics**: Immediate results with glassmorphic, percentage-based visualizations.
+- **📈 Dashboard KPIs**: Instant oversight with real-time tiles for Total Polls, Active Votes, and Completion statuses.
 - **📝 Launch in Seconds**: A minimalist interface for creating complex polls with multiple candidates.
+- **💾 Drafting Workspace**: Persistent, database-backed drafting system with full "Continue Editing" support and automated form resets.
 
 ### 🔨 Premium eAuction Platform
 - **💎 High-Fidelity Bidding**: A custom, real-time bidding interface with ownership verification.
 - **🖼️ Asset Management**: Launch auctions with high-resolution image uploads (up to 50MB) and detailed descriptions.
-- **📅 Advanced Scheduling**: Precise auction end-date selection using a custom premium calendar system.
+- **📅 Advanced Scheduling**: Precise auction and poll end-date selection using a custom premium calendar system.
 - **🔍 Smart Discovery**: Robust search and multi-criteria sorting (Newest, Price, Popularity).
 
 ### 🚀 Viral Sharing & Deep Linking
@@ -34,7 +36,8 @@ VoteHub follows a **Premium Monochrome** design system:
 - **Glassmorphism**: Translucent card layouts with backdrop-blur and subtle borders.
 - **Sharp Aesthetics**: Standardized sharp corner radii (8px) for an enterprise-grade feel.
 - **Inter Typography**: Clean, sans-serif typography (Inter) used globally for maximum readability.
-- **Sentence-Case UI**: Approachable and modern button/header casing throughout the app.
+- **Title-Case UI**: Approachable and modern button/header casing throughout the app, prioritizing legibility and a premium feel.
+- **Minimalist Feedback**: Integrated, glassmorphic success modals that replace invasive browser alerts for a "native" app experience.
 
 ---
 

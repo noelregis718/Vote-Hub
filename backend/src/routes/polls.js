@@ -5,7 +5,39 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// Create a Poll
+/**
+ * @swagger
+ * tags:
+ *   name: Polls
+ *   description: Community voting and poll management
+ */
+
+/**
+ * @swagger
+ * /api/polls:
+ *   post:
+ *     summary: Create a new poll
+ *     tags: [Polls]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [title, candidates]
+ *             properties:
+ *               title: { type: string, example: "Best UI Library 2026" }
+ *               description: { type: string, example: "Vote for the future of web dev" }
+ *               candidates: { type: array, items: { type: string }, example: ["React", "Vue", "Solid"] }
+ *               endsAt: { type: string, format: date-time }
+ *     responses:
+ *       201:
+ *         description: Poll created
+ *       500:
+ *         description: Server error
+ */
 router.post('/', auth, async (req, res) => {
   try {
     const { title, description, candidates, endsAt } = req.body;
@@ -29,7 +61,22 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// Get All Polls
+/**
+ * @swagger
+ * /api/polls:
+ *   get:
+ *     summary: Get all active polls
+ *     tags: [Polls]
+ *     responses:
+ *       200:
+ *         description: List of active polls
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Poll'
+ */
 router.get('/', async (req, res) => {
   try {
     const polls = await prisma.poll.findMany({
@@ -48,7 +95,37 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Vote in a Poll
+/**
+ * @swagger
+ * /api/polls/{pollId}/vote:
+ *   post:
+ *     summary: Cast a vote in a poll
+ *     tags: [Polls]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: pollId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [candidateId]
+ *             properties:
+ *               candidateId: { type: string, example: "uuid-candidate-id" }
+ *     responses:
+ *       201:
+ *         description: Vote successful
+ *       400:
+ *         description: Already voted
+ *       404:
+ *         description: Not found
+ */
 router.post('/:pollId/vote', auth, async (req, res) => {
   try {
     const { candidateId } = req.body;

@@ -10,7 +10,7 @@ export default function EAuction() {
   const [auctions, setAuctions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  
+
   // Share State
   const [shareItem, setShareItem] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -68,10 +68,10 @@ export default function EAuction() {
     if (!newAuction.endsAt) return alert("Please select an auction end date.");
 
     try {
-      const endpoint = editingId 
+      const endpoint = editingId
         ? `http://localhost:5000/api/auctions/${editingId}`
         : 'http://localhost:5000/api/auctions';
-      
+
       const res = await fetch(endpoint, {
         method: editingId ? 'PUT' : 'POST',
         headers: {
@@ -158,8 +158,8 @@ export default function EAuction() {
       if (auctionId && a.id === auctionId) return true;
       if (auctionId) return false; // If deep-linking, only show that one
 
-      return a.title.toLowerCase().includes(search.toLowerCase()) || 
-             a.description.toLowerCase().includes(search.toLowerCase());
+      return a.title.toLowerCase().includes(search.toLowerCase()) ||
+        a.description.toLowerCase().includes(search.toLowerCase());
     })
     .sort((a, b) => {
       if (sortBy === 'price-low') return a.currentBid - b.currentBid;
@@ -175,21 +175,21 @@ export default function EAuction() {
           <h1 className="text-4xl font-black tracking-tight text-white uppercase">eAuction</h1>
           <p className="text-slate-500 mt-1 font-medium">Premium assets, competitive bidding.</p>
         </div>
-        <button 
+        <button
           onClick={() => setShowCreateModal(true)}
           className="glass-button flex items-center space-x-2 px-6 py-3 group"
         >
           <Plus size={18} className="group-hover:rotate-90 transition-transform" />
-          <span className="font-bold uppercase tracking-widest text-xs">Start Auction</span>
+          <span className="font-extrabold tracking-wide text-base">Start Auction</span>
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="md:col-span-3 relative group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-white transition-colors" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search premium assets..." 
+          <input
+            type="text"
+            placeholder="Search premium assets..."
             className="glass-input pl-12 h-14"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -199,7 +199,7 @@ export default function EAuction() {
           <PopoverTrigger asChild>
             <button className="glass-card flex items-center justify-center space-x-2 hover:bg-white/5 transition-colors h-14 border-white/10 w-full">
               <Filter size={18} className="text-slate-400" />
-              <span className="text-xs font-bold uppercase tracking-widest text-slate-300">
+              <span className="text-base font-bold tracking-wide text-slate-300">
                 {sortBy === 'newest' ? 'Newest' : sortBy === 'price-low' ? 'Price: Low' : sortBy === 'price-high' ? 'Price: High' : 'Popular'}
               </span>
             </button>
@@ -215,9 +215,8 @@ export default function EAuction() {
                 <button
                   key={option.id}
                   onClick={() => setSortBy(option.id)}
-                  className={`w-full text-left px-3 py-2 rounded-md text-xs font-bold uppercase tracking-tight transition-colors ${
-                    sortBy === option.id ? 'bg-white/10 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'
-                  }`}
+                  className={`w-full text-left px-3 py-2 rounded-md text-base font-bold tracking-tight transition-colors ${sortBy === option.id ? 'bg-white/10 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                    }`}
                 >
                   {option.label}
                 </button>
@@ -241,9 +240,9 @@ export default function EAuction() {
           {filteredAndSortedAuctions.map((item) => (
             <div key={item.id} className="glass-card overflow-hidden group hover:border-white/20 transition-all flex flex-col">
               <div className="aspect-[4/3] bg-white/5 relative overflow-hidden">
-                <img 
-                  src={item.image || "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000&auto=format&fit=crop"} 
-                  alt={item.title} 
+                <img
+                  src={item.image || "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000&auto=format&fit=crop"}
+                  alt={item.title}
                   className="w-full h-full object-cover grayscale opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
                 />
                 <div className="absolute top-4 left-4 bg-black/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full flex items-center space-x-2">
@@ -251,7 +250,7 @@ export default function EAuction() {
                   <span className="text-[10px] font-black uppercase tracking-widest text-white">Live</span>
                 </div>
               </div>
-              
+
               <div className="p-6 flex-grow flex flex-col space-y-4">
                 <div>
                   <h3 className="text-xl font-bold text-white group-hover:text-slate-300 transition-colors uppercase">{item.title}</h3>
@@ -260,11 +259,11 @@ export default function EAuction() {
 
                 <div className="grid grid-cols-2 gap-4 py-4 border-y border-white/5">
                   <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Current Bid</p>
+                    <p className="text-sm tracking-wide text-slate-500 font-bold">Current Bid</p>
                     <p className="text-lg font-black text-white">₹{item.currentBid.toLocaleString()}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Total Bids</p>
+                    <p className="text-sm tracking-wide text-slate-500 font-bold">Total Bids</p>
                     <div className="flex items-center space-x-1.5">
                       <TrendingUp size={14} className="text-green-500" />
                       <p className="text-lg font-black text-white">{item._count?.bids || 0}</p>
@@ -275,8 +274,8 @@ export default function EAuction() {
                 <div className="pt-2 flex items-center justify-between mt-auto">
                   <div className="flex items-center space-x-2 text-slate-400">
                     <Clock size={16} />
-                    <span className="text-[10px] font-bold uppercase tracking-tight">
-                      {new Date(item.endsAt) > new Date() ? 'Ends soon' : 'Ended'}
+                    <span className="text-sm font-bold tracking-tight">
+                      {new Date(item.endsAt) > new Date() ? 'Ends Soon' : 'Ended'}
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -293,7 +292,7 @@ export default function EAuction() {
                     <button onClick={() => openBidModal(item)} className="text-xs font-bold px-4 py-2 border border-white bg-white text-black hover:bg-transparent hover:text-white transition-all rounded-md">
                       Place Bid
                     </button>
-                    <button 
+                    <button
                       onClick={() => setShareItem(item)}
                       className="p-2 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all rounded-md ml-2"
                       title="Share Auction"
@@ -309,9 +308,9 @@ export default function EAuction() {
       )}
 
       {/* Share Modal */}
-      <ShareModal 
-        isOpen={!!shareItem} 
-        onClose={() => setShareItem(null)} 
+      <ShareModal
+        isOpen={!!shareItem}
+        onClose={() => setShareItem(null)}
         title={shareItem?.title}
         type="Auction"
         url={`${window.location.origin}/eauction?auctionId=${shareItem?.id}`}
@@ -363,7 +362,7 @@ export default function EAuction() {
               {imagePreview ? (
                 <>
                   <img src={imagePreview} className="w-full h-full object-cover" alt="Preview" />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center" onClick={() => { setImagePreview(null); setNewAuction({...newAuction, image: ''}); }}>
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center" onClick={() => { setImagePreview(null); setNewAuction({ ...newAuction, image: '' }); }}>
                     <X size={32} className="text-white" />
                   </div>
                 </>
@@ -386,23 +385,23 @@ export default function EAuction() {
                   <h2 className="text-2xl font-black text-white uppercase tracking-tighter">New Auction</h2>
                   <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Asset Details</p>
                 </div>
-                <button onClick={() => { setShowCreateModal(false); setEditingId(null); setNewAuction({title:'', description:'', startingBid:'', endsAt:'', image:''}); setImagePreview(null); }} className="text-slate-500 hover:text-white transition-colors">
+                <button onClick={() => { setShowCreateModal(false); setEditingId(null); setNewAuction({ title: '', description: '', startingBid: '', endsAt: '', image: '' }); setImagePreview(null); }} className="text-slate-500 hover:text-white transition-colors">
                   <X size={20} />
                 </button>
               </div>
               <form onSubmit={handleCreateAuction} className="space-y-5">
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Asset Title</label>
-                  <input type="text" required placeholder="e.g. Vintage Leica M6" className="glass-input h-10 text-sm" value={newAuction.title} onChange={(e) => setNewAuction({...newAuction, title: e.target.value})} />
+                  <input type="text" required placeholder="e.g. Vintage Leica M6" className="glass-input h-10 text-sm" value={newAuction.title} onChange={(e) => setNewAuction({ ...newAuction, title: e.target.value })} />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Description</label>
-                  <textarea required placeholder="Details about the asset..." className="glass-input py-2.5 h-20 text-sm resize-none" value={newAuction.description} onChange={(e) => setNewAuction({...newAuction, description: e.target.value})} />
+                  <textarea required placeholder="Details about the asset..." className="glass-input py-2.5 h-20 text-sm resize-none" value={newAuction.description} onChange={(e) => setNewAuction({ ...newAuction, description: e.target.value })} />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Starting Bid (₹)</label>
-                    <input type="number" required placeholder="25000" className="glass-input h-10 text-sm" value={newAuction.startingBid} onChange={(e) => setNewAuction({...newAuction, startingBid: e.target.value})} />
+                    <input type="number" required placeholder="25000" className="glass-input h-10 text-sm" value={newAuction.startingBid} onChange={(e) => setNewAuction({ ...newAuction, startingBid: e.target.value })} />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Auction End Date</label>

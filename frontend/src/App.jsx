@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { Layout } from './components/Layout'
 import Login from './pages/Login'
@@ -10,6 +10,9 @@ import Landing from './pages/Landing'
 import AuthSuccess from './pages/AuthSuccess'
 import EAuction from './pages/EAuction'
 import Contact from './pages/Contact'
+import Privacy from './pages/Privacy'
+import Terms from './pages/Terms'
+import Proposals from './pages/Proposals'
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth()
@@ -19,15 +22,23 @@ function ProtectedRoute({ children }) {
 
 function AppContent() {
   const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    window.location.href = '/'
+  }
 
   return (
-    <Layout user={user} onLogout={logout}>
+    <Layout user={user} onLogout={handleLogout}>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/auth-success" element={<AuthSuccess />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />
@@ -41,6 +52,11 @@ function AppContent() {
         <Route path="/eauction" element={
           <ProtectedRoute>
             <EAuction />
+          </ProtectedRoute>
+        } />
+        <Route path="/proposals" element={
+          <ProtectedRoute>
+            <Proposals />
           </ProtectedRoute>
         } />
       </Routes>

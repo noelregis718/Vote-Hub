@@ -18,7 +18,7 @@ export function Footer({
             className="flex items-center gap-x-3 group"
             aria-label={brandName}
           >
-            <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-colors">
+            <div className="w-10 h-10 rounded-md bg-white flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-colors overflow-hidden">
               {logo}
             </div>
             <span className="font-bold text-2xl tracking-tight text-white">{brandName}</span>
@@ -47,7 +47,7 @@ export function Footer({
                 <li key={i} className="my-2 mx-4 shrink-0">
                   <a
                     href={link.href}
-                    className="text-sm text-slate-400 hover:text-white transition-colors underline-offset-4 hover:underline font-medium"
+                    className="text-sm text-white hover:text-slate-300 transition-colors underline-offset-4 hover:underline font-medium"
                   >
                     {link.label}
                   </a>
@@ -61,7 +61,7 @@ export function Footer({
                 <li key={i} className="my-1 mx-4 shrink-0">
                   <a
                     href={link.href}
-                    className="text-xs text-slate-500 hover:text-slate-300 transition-colors underline-offset-4 hover:underline"
+                    className="text-xs text-white hover:text-slate-300 transition-colors underline-offset-4 hover:underline"
                   >
                     {link.label}
                   </a>
@@ -69,7 +69,7 @@ export function Footer({
               ))}
             </ul>
           </div>
-          <div className="mt-8 text-sm leading-6 text-slate-500 whitespace-nowrap lg:mt-0 lg:row-[1/3] lg:col-[1/4] font-light">
+          <div className="mt-8 text-sm leading-6 text-white whitespace-nowrap lg:mt-0 lg:row-[1/3] lg:col-[1/4] font-light">
             <div>{copyright.text}</div>
             {copyright.license && <div className="text-xs opacity-75">{copyright.license}</div>}
           </div>

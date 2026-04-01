@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { PrismaClient } = require('@prisma/client');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 
 dotenv.config();
 
@@ -31,14 +33,21 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'VoteHub API is running' });
 });
 
+// Swagger UI Route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Import routes
 const authRoutes = require('./routes/auth');
 const pollRoutes = require('./routes/polls');
 const auctionRoutes = require('./routes/auctions');
+const draftRoutes = require('./routes/drafts');
+const proposalRoutes = require('./routes/proposals');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/polls', pollRoutes);
 app.use('/api/auctions', auctionRoutes);
+app.use('/api/drafts', draftRoutes);
+app.use('/api/proposals', proposalRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
