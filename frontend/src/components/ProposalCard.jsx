@@ -2,26 +2,25 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import {
-  Heart,
   Share2,
-  Target,
-  Coins,
   User,
   CheckCircle,
   Loader2,
-  Check
+  Check,
+  Pencil
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
-export function ProposalCard({ proposal, onSupportToggle }) {
+export function ProposalCard({ proposal, onSupportToggle, onEdit }) {
   const { user, token } = useAuth();
   const [isUpdating, setIsUpdating] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
   const supportCount = proposal._count?.supports || 0;
-  const targetSupports = 50;
+  const targetSupports = proposal.targetSupports || 100;
   const progress = Math.min(Math.round((supportCount / targetSupports) * 100), 100);
   const isSupportedByMe = proposal.supports?.some(s => s.userId === user?.id);
+  const isAuthor = user?.id === proposal.userId;
 
   const handleSupport = async () => {
     if (!user) return;
@@ -47,111 +46,114 @@ export function ProposalCard({ proposal, onSupportToggle }) {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'PENDING': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
-      case 'REVIEW': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'APPROVED': return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 'REJECTED': return 'bg-red-500/20 text-red-400 border-red-500/30';
-      case 'IMPLEMENTED': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
-      default: return 'bg-slate-500/20 text-slate-400 border-slate-500/30';
+      case 'PENDING': return 'border-yellow-500/50 text-yellow-500 bg-yellow-500/5';
+      case 'REVIEW': return 'border-blue-500/50 text-blue-400 bg-blue-500/5';
+      case 'APPROVED': return 'border-green-500/50 text-green-400 bg-green-500/5';
+      case 'REJECTED': return 'border-red-500/50 text-red-400 bg-red-500/5';
+      case 'IMPLEMENTED': return 'border-purple-500/50 text-purple-400 bg-purple-500/5';
+      default: return 'border-slate-500/50 text-slate-400 bg-slate-500/5';
     }
   };
 
   return (
-    <div className="glass-card overflow-hidden hover:border-white/30 transition-all duration-500 group flex flex-col h-full">
-      <div className="p-6 space-y-5 flex-grow">
-        <div className="flex justify-between items-start">
-          <div className="flex items-center space-x-2">
-            <span className={clsx(
-              "text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wider",
-              getStatusColor(proposal.status)
-            )}>
-              {proposal.status}
-            </span>
-          </div>
-          <button
-            onClick={handleShare}
-            className="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all rounded-lg border border-white/5 relative text-[10px] font-bold uppercase tracking-widest"
-            title="Share Proposal"
-          >
-            {isCopied ? 'Copied' : 'Share'}
-            {isCopied && (
-              <span className="absolute -top-8 right-0 bg-white text-black text-[10px] px-2 py-1 rounded shadow-lg whitespace-nowrap animate-in fade-in slide-in-from-bottom-2">
-                Link Copied!
-              </span>
-            )}
-          </button>
-        </div>
-
-        <div className="space-y-2">
-          <h3 className="text-xl font-black text-white group-hover:text-slate-300 transition-colors uppercase tracking-tight leading-tight">
-            {proposal.title}
-          </h3>
-          <div className="flex items-center space-x-2 text-xs text-slate-500">
-            <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center overflow-hidden border border-white/5">
-              {proposal.createdBy?.avatar && (
-                <img src={proposal.createdBy.avatar} alt="" className="w-full h-full object-cover" />
-              )}
-            </div>
-            <span>by {proposal.createdBy?.name || 'Anonymous'}</span>
-          </div>
-        </div>
-
-        <p className="text-slate-400 text-sm line-clamp-3 leading-relaxed font-medium">
-          {proposal.description}
-        </p>
-
-        {/* Goal Section */}
-        <div className="bg-white/[0.03] rounded-xl p-4 border border-white/5 space-y-3">
-          <div className="flex items-start space-x-3">
-            <div>
-              <p className="text-[11px] font-semibold text-slate-500 font-sans mb-1">Specific goal</p>
-              <p className="text-xs text-slate-300 leading-normal">{proposal.goal}</p>
-            </div>
-          </div>
-          {proposal.budget && (
-            <div className="flex items-center space-x-3 border-t border-white/5 pt-3">
-              <div>
-                <p className="text-[11px] font-semibold text-slate-500 font-sans mb-0.5">Estimated budget</p>
-                <p className="text-xs text-white font-black">${proposal.budget.toLocaleString()}</p>
-              </div>
-            </div>
+    <div className="glass-card overflow-hidden hover:border-white/20 transition-all duration-500 group flex flex-col h-full p-8 space-y-8">
+      {/* Top Header */}
+      <div className="flex justify-between items-center">
+        <div className="flex items-center space-x-3">
+          <span className={clsx(
+            "text-[10px] font-bold px-3 py-1 rounded-full border uppercase tracking-wider",
+            getStatusColor(proposal.status)
+          )}>
+            {proposal.status}
+          </span>
+          {isAuthor && (
+            <button
+              onClick={() => onEdit?.(proposal)}
+              className="p-1 px-3 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all rounded-lg border border-white/5 text-[10px] font-black uppercase tracking-widest flex items-center space-x-1"
+            >
+              <Pencil size={12} />
+              <span>EDIT</span>
+            </button>
           )}
         </div>
+        <button
+          onClick={handleShare}
+          className="px-4 py-2 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all rounded-md border border-white/5 text-[10px] font-black uppercase tracking-widest"
+        >
+          {isCopied ? 'Copied' : 'SHARE'}
+        </button>
+      </div>
 
-        {/* Progress Bar */}
-        <div className="space-y-2 pt-2">
-          <div className="flex justify-between items-end">
-            <span className="text-[11px] font-semibold text-slate-500 font-sans">Community support</span>
-            <span className="text-xs font-black text-white">{supportCount} <span className="text-slate-500 font-medium">/ {targetSupports}</span></span>
+      {/* Title & Author */}
+      <div className="space-y-4">
+        <h3 className="text-3xl font-black text-white uppercase tracking-tight leading-[1.1]">
+          {proposal.title}
+        </h3>
+        <div className="flex items-center space-x-3 text-sm text-slate-500 font-bold">
+          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center overflow-hidden border border-white/5">
+            {proposal.createdBy?.avatar ? (
+              <img src={proposal.createdBy.avatar} alt={proposal.createdBy.name} className="w-full h-full object-cover" />
+            ) : (
+              <User size={16} className="text-slate-500" />
+            )}
           </div>
-          <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-            <div
-              className="h-full bg-gradient-to-r from-white via-slate-300 to-slate-500 transition-all duration-1000 shadow-[0_0_10px_rgba(255,255,255,0.3)]"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+          <span>by {proposal.createdBy?.name || 'Anonymous'}</span>
         </div>
       </div>
 
-      <div className="p-6 pt-0 mt-auto">
+      {/* Description */}
+      <p className="text-slate-400 text-base leading-relaxed font-bold">
+        {proposal.description}
+      </p>
+
+      {/* Details Container */}
+      <div className="bg-white/[0.03] rounded-2xl p-6 border border-white/5 space-y-6">
+        <div className="space-y-1.5">
+          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Specific goal</p>
+          <p className="text-base text-white font-bold">{proposal.goal}</p>
+        </div>
+        {proposal.budget !== null && (
+          <div className="space-y-1.5 border-t border-white/5 pt-4">
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Estimated budget</p>
+            <p className="text-xl font-black text-white tracking-tight">₹{proposal.budget?.toLocaleString()}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Progress Section */}
+      <div className="space-y-4 pt-2">
+        <div className="flex justify-between items-end">
+          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Community support</span>
+          <span className="text-sm font-black text-white">{supportCount} <span className="text-slate-500 font-bold">/ {targetSupports}</span></span>
+        </div>
+        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-white transition-all duration-1000 shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Action Button */}
+      <div className="pt-2">
         <button
           onClick={handleSupport}
           disabled={!user || isUpdating}
           className={clsx(
-            "w-full flex items-center justify-center space-x-2 h-12 rounded-xl border transition-all font-bold text-sm uppercase tracking-widest",
+            "w-full flex items-center justify-center space-x-2 h-16 rounded-md transition-all font-black text-base uppercase tracking-widest",
             isSupportedByMe
-              ? "bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.1)]"
-              : "bg-white/5 text-white border-white/10 hover:bg-white/10"
+              ? "bg-white text-black shadow-[0_10px_30px_rgba(255,255,255,0.15)]"
+              : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
           )}
         >
           {isUpdating ? (
-            <span className="animate-pulse">Processing...</span>
+            <Loader2 className="animate-spin" size={24} />
           ) : (
-            <span>{isSupportedByMe ? 'Supported' : 'Support Proposal'}</span>
+            <span>{isSupportedByMe ? 'SUPPORTED' : 'SUPPORT PROPOSAL'}</span>
           )}
         </button>
         {!user && (
-          <p className="text-[10px] text-center text-slate-600 mt-2">Sign in to support this project</p>
+          <p className="text-[10px] text-center text-slate-600 mt-3 font-bold uppercase tracking-widest">Sign in to support</p>
         )}
       </div>
     </div>

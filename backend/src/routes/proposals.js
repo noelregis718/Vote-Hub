@@ -40,7 +40,7 @@ const prisma = new PrismaClient();
  */
 router.post('/', auth, async (req, res) => {
   try {
-    const { title, description, goal, budget } = req.body;
+    const { title, description, goal, budget, targetSupports } = req.body;
     
     const proposal = await prisma.proposal.create({
       data: {
@@ -48,6 +48,7 @@ router.post('/', auth, async (req, res) => {
         description,
         goal,
         budget: budget ? parseFloat(budget) : null,
+        targetSupports: targetSupports ? parseInt(targetSupports) : 100,
         userId: req.user.id
       }
     });
@@ -102,6 +103,69 @@ router.get('/', async (req, res) => {
  *       200:
  *         description: Support toggled successfully
  */
+/**
+ * @swagger
+ * /api/proposals/{id}:
+ *   put:
+ *     summary: Update an existing community proposal
+ *     tags: [Proposals]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title: { type: string }
+ *               description: { type: string }
+ *               goal: { type: string }
+ *               budget: { type: number }
+ *               targetSupports: { type: number }
+ *     responses:
+ *       200:
+ *         description: Proposal updated successfully
+ *       403:
+ *         description: Unauthorized to edit this proposal
+ *       404:
+ *         description: Proposal not found
+ */
+router.put('/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, goal, budget, targetSupports } = req.body;
+
+    const proposal = await prisma.proposal.findUnique({ where: { id } });
+    if (!proposal) return res.status(404).json({ message: 'Proposal not found' });
+    
+    if (proposal.userId !== req.user.id) {
+      return res.status(403).json({ message: 'Unauthorized: You can only edit your own proposals' });
+    }
+
+    const updatedProposal = await prisma.proposal.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        goal,
+        budget: budget ? parseFloat(budget) : null,
+        targetSupports: targetSupports ? parseInt(targetSupports) : 100
+      }
+    });
+
+    res.json(updatedProposal);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
 router.post('/:id/support', auth, async (req, res) => {
   try {
     const { id } = req.params;

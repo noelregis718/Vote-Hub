@@ -107,6 +107,7 @@ model Proposal {
   description String
   goal        String
   budget      Float?
+  targetSupports Int   @default(100)
   status      ProposalStatus @default(PENDING)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

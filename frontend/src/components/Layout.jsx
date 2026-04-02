@@ -13,7 +13,11 @@ import {
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
-  Lightbulb
+  Lightbulb,
+  Plus,
+  History,
+  CheckCircle,
+  FileText
 } from 'lucide-react';
 
 export function Layout({ children, user, onLogout }) {
@@ -21,10 +25,9 @@ export function Layout({ children, user, onLogout }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navItems = [
-    { label: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
+    { label: 'Polls', path: '/dashboard', icon: <VoteIcon size={20} /> },
     { label: 'eAuction', path: '/eauction', icon: <Gavel size={20} /> },
     { label: 'Proposals', path: '/proposals', icon: <Lightbulb size={20} /> },
-    { label: 'Create Poll', path: '/create-poll', icon: <PlusCircle size={20} /> },
   ];
 
   return (
@@ -77,39 +80,42 @@ export function Layout({ children, user, onLogout }) {
                   Main Menu
                 </div>
               )}
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-start space-x-3 px-4'} py-3 transition-all group relative w-full rounded-lg`}
-                  title={item.label}
-                >
-                  <div className={`flex items-center justify-center transition-all duration-300 ${location.pathname === item.path
-                    ? 'text-white'
-                    : 'text-slate-500 group-hover:text-white'
-                    }`}>
-                    {React.cloneElement(item.icon, { size: isCollapsed ? 26 : 20 })}
-                  </div>
-                  {!isCollapsed && (
-                    <span className={`font-medium transition-colors ${location.pathname === item.path ? 'text-white' : 'text-slate-500 group-hover:text-white'
-                      }`}>
-                      {item.label}
-                    </span>
-                  )}
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                const content = (
+                  <>
+                    <div className={`flex items-center justify-center transition-all duration-300 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-white'}`}>
+                      {React.cloneElement(item.icon, { size: isCollapsed ? 26 : 20 })}
+                    </div>
+                    {!isCollapsed && (
+                      <span className={`font-medium transition-colors ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-white'}`}>
+                        {item.label}
+                      </span>
+                    )}
+                    {isActive && (
+                      <div className={`absolute ${isCollapsed ? 'right-0' : 'right-2'} top-1/2 -translate-y-1/2 w-1 h-6 bg-white rounded-full shadow-[0_0_15px_rgba(255,255,255,0.6)]`} />
+                    )}
+                  </>
+                );
 
-                  {/* Active Indicator Line */}
-                  {location.pathname === item.path && (
-                    <div className={`absolute ${isCollapsed ? 'right-0' : 'right-2'} top-1/2 -translate-y-1/2 w-1 h-6 bg-white rounded-full shadow-[0_0_15px_rgba(255,255,255,0.6)]`} />
-                  )}
-                </Link>
-              ))}
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-start space-x-3 px-4'} py-3 transition-all group relative w-full rounded-lg`}
+                    title={item.label}
+                  >
+                    {content}
+                  </Link>
+                );
+              })}
             </nav>
 
             {/* Bottom Section */}
             <div className={`w-full mt-auto space-y-8 pb-8 flex flex-col ${isCollapsed ? 'items-start' : 'items-center px-4'}`}>
               <button
                 onClick={onLogout}
-                className={`flex items-center transition-all text-slate-500 hover:text-red-500 ${isCollapsed ? 'justify-center w-full h-10' : 'justify-center space-x-2 w-full py-3 rounded-lg border border-white/5 bg-white/5 hover:bg-red-500/10 font-bold text-xs uppercase tracking-widest'}`}
+                className={`flex items-center transition-all text-slate-500 hover:text-red-500 ${isCollapsed ? 'justify-center w-full h-10' : 'justify-center space-x-2 w-full py-3 rounded-md border border-white/5 bg-white/5 hover:bg-red-500/10 font-bold text-xs uppercase tracking-widest'}`}
                 title="Logout"
               >
                 <LogOut size={isCollapsed ? 24 : 16} />
@@ -140,37 +146,42 @@ export function Layout({ children, user, onLogout }) {
       {/* Main Content Area */}
       <div className="flex-grow flex flex-col min-w-0 overflow-hidden">
         {/* Top Navbar - Mobile & Unauthenticated */}
-        <header className={`h-20 flex items-center justify-between px-6 lg:px-10 border-b border-white/5 backdrop-blur-md sticky top-0 z-50 ${user ? 'lg:hidden' : 'w-full'}`}>
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-md bg-white flex items-center justify-center overflow-hidden">
-              <img src="/logo.png" alt="VoteHub Logo" className="w-full h-full object-cover p-0.5" />
-            </div>
-            <span className="text-xl font-black tracking-tighter text-white">VoteHub</span>
-          </Link>
+        <header className={`h-20 border-b border-white/5 backdrop-blur-md sticky top-0 z-50 w-full`}>
+          <div className={`h-full flex items-center justify-between pl-6 lg:pl-12 ${user ? 'pr-0' : 'pr-6 lg:pr-12'} ${!user ? 'container mx-auto max-w-7xl' : ''}`}>
+            <Link to="/" className={`flex items-center space-x-4 ${user ? 'lg:hidden' : ''}`}>
+              <div className="w-9 h-9 rounded-md bg-white flex items-center justify-center overflow-hidden">
+                <img src="/logo.png" alt="VoteHub Logo" className="w-full h-full object-cover p-1" />
+              </div>
+              <span className="text-3xl font-black tracking-tighter text-white">VoteHub</span>
+            </Link>
 
-          <div className="flex items-center space-x-4">
-            {user ? (
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 overflow-hidden">
-                    {user.avatar ? (
-                      <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <UserIcon size={16} className="text-white" />
-                    )}
+            <div className="flex items-center space-x-8">
+              {user ? (
+                <div className="flex items-center space-x-8">
+                  {/* Action buttons REMOVED from here to be placed in Dashboard */}
+                  <div className="flex items-center space-x-6 lg:hidden">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 overflow-hidden">
+                        {user.avatar ? (
+                          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <UserIcon size={20} className="text-white" />
+                        )}
+                      </div>
+                      <span className="text-base font-bold text-white hidden sm:inline">{user.name}</span>
+                    </div>
+                    <button onClick={onLogout} className="p-2 text-slate-400 hover:text-red-400 transition-colors">
+                      <LogOut size={24} />
+                    </button>
                   </div>
-                  <span className="text-sm font-bold text-white hidden sm:inline">{user.name}</span>
                 </div>
-                <button onClick={onLogout} className="p-2 text-slate-400 hover:text-red-400 transition-colors">
-                  <LogOut size={20} />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-4">
-                <Link to="/login" className="text-sm font-medium text-white hover:text-slate-300 transition-colors">Log In</Link>
-                <Link to="/register" className="glass-button text-xs px-4 py-2">Sign Up</Link>
-              </div>
-            )}
+              ) : (
+                <div className="flex items-center space-x-8">
+                  <Link to="/login" className="text-lg font-bold text-white hover:text-slate-300 transition-colors">Log In</Link>
+                  <Link to="/register" className="glass-button text-xl px-4 py-1 font-bold">Sign Up</Link>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 

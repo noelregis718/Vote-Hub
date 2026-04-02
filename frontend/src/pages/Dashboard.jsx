@@ -1,17 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { PollCard } from '../components/PollCard';
-import { Loader2, RefreshCcw, X, Plus, Trash2, Calendar as CalendarIcon, Activity, Users, CheckCircle } from 'lucide-react';
+import { 
+  Loader2, RefreshCcw, X, Plus, Trash2, 
+  Calendar as CalendarIcon, Activity, Users, 
+  CheckCircle, History, Send 
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { DropdownMultiCalendar } from '../components/ui/dropdown-multi-calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import ShareModal from '../components/ShareModal';
+import { CreatePollModal } from '../components/CreatePollModal';
+import { DraftsModal } from '../components/DraftsModal';
 
 export default function Dashboard() {
   const { token, user } = useAuth();
   const [polls, setPolls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Modals & Action States
+  const [isCreatePollOpen, setIsCreatePollOpen] = useState(false);
+  const [isDraftsOpen, setIsDraftsOpen] = useState(false);
+  const [selectedDraft, setSelectedDraft] = useState(null);
+  const [sharePoll, setSharePoll] = useState(null);
 
   // Editing State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -23,8 +35,6 @@ export default function Dashboard() {
     candidates: [],
     endsAt: ''
   });
-
-  const [sharePoll, setSharePoll] = useState(null);
 
   const fetchPolls = async () => {
     setLoading(true);
@@ -41,6 +51,17 @@ export default function Dashboard() {
   useEffect(() => {
     fetchPolls();
   }, []);
+
+  const handleSelectDraft = (draft) => {
+    setSelectedDraft(draft);
+    setIsDraftsOpen(false);
+    setIsCreatePollOpen(true);
+  };
+
+  const handleCreatePoll = () => {
+    setSelectedDraft(null);
+    setIsCreatePollOpen(true);
+  };
 
   const handleDeletePoll = async (id) => {
     if (!window.confirm("Are you sure you want to delete this poll? This will delete all associated votes.")) return;
@@ -93,10 +114,6 @@ export default function Dashboard() {
     setEditData({ ...editData, candidates: editData.candidates.filter((_, i) => i !== index) });
   };
 
-  useEffect(() => {
-    fetchPolls();
-  }, []);
-
   const stats = [
     { label: 'Total polls', value: polls.length, icon: <Plus size={20} />, color: 'text-blue-400' },
     { label: 'Votes cast', value: polls.reduce((acc, p) => acc + (p._count?.votes || 0), 0), icon: <Users size={20} />, color: 'text-green-400' },
@@ -114,22 +131,30 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-5 duration-700">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 -mt-10">
         <div className="space-y-1">
           <h1 className="text-3xl font-extrabold text-white tracking-tight">
             {new URLSearchParams(window.location.search).get('pollId') ? 'Shared Poll' : 'Active Polls'}
           </h1>
           <p className="text-slate-400">Discover and participate in ongoing community decisions.</p>
         </div>
-        <div className="flex items-center space-x-2">
-          {new URLSearchParams(window.location.search).get('pollId') && (
-            <button
-              onClick={() => window.history.replaceState({}, '', '/dashboard')}
-              className="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-white mr-4"
-            >
-              Show All Polls
-            </button>
-          )}
+        
+        {/* Contextual Action Buttons */}
+        <div className="flex items-center space-x-6">
+          <button 
+            onClick={() => setIsDraftsOpen(true)}
+            className="flex items-center space-x-3 text-slate-400 hover:text-white transition-all text-lg font-bold group"
+          >
+            <History size={20} className="group-hover:-rotate-12 transition-transform" />
+            <span>Drafts</span>
+          </button>
+          <button 
+            onClick={handleCreatePoll}
+            className="flex items-center space-x-3 bg-white text-black px-6 py-2 rounded-lg font-bold text-lg hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95"
+          >
+            <Plus size={22} />
+            <span>Create Poll</span>
+          </button>
         </div>
       </header>
 
@@ -182,7 +207,7 @@ export default function Dashboard() {
         url={`${window.location.origin}/dashboard?pollId=${sharePoll?.id}`}
       />
 
-      {/* Edit Poll Modal */}
+      {/* Edit Poll Modal - Kept for legacy edits, though CreatePollModal is primary */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsEditModalOpen(false)} />
@@ -289,6 +314,23 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Global Poll Modals (Contextual to Dashboard) */}
+      <CreatePollModal 
+        isOpen={isCreatePollOpen}
+        onClose={() => setIsCreatePollOpen(false)}
+        initialData={selectedDraft}
+        onPollCreated={fetchPolls}
+        onDraftSaved={() => {
+          //Notification could be added here
+        }}
+      />
+      
+      <DraftsModal 
+        isOpen={isDraftsOpen}
+        onClose={() => setIsDraftsOpen(false)}
+        onSelectDraft={handleSelectDraft}
+      />
     </div>
   );
 }
