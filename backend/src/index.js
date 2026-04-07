@@ -42,12 +42,14 @@ const pollRoutes = require('./routes/polls');
 const auctionRoutes = require('./routes/auctions');
 const draftRoutes = require('./routes/drafts');
 const proposalRoutes = require('./routes/proposals');
+const newsRoutes = require('./routes/news');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/polls', pollRoutes);
 app.use('/api/auctions', auctionRoutes);
 app.use('/api/drafts', draftRoutes);
 app.use('/api/proposals', proposalRoutes);
+app.use('/api/news', newsRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

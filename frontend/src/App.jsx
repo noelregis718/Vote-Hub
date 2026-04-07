@@ -12,6 +12,7 @@ import Contact from './pages/Contact'
 import Privacy from './pages/Privacy'
 import Terms from './pages/Terms'
 import Proposals from './pages/Proposals'
+import Trending from './pages/Trending'
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth()
@@ -52,6 +53,11 @@ function AppContent() {
         <Route path="/proposals" element={
           <ProtectedRoute>
             <Proposals />
+          </ProtectedRoute>
+        } />
+        <Route path="/trending" element={
+          <ProtectedRoute>
+            <Trending />
           </ProtectedRoute>
         } />
       </Routes>

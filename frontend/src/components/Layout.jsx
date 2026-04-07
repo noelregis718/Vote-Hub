@@ -17,7 +17,8 @@ import {
   Plus,
   History,
   CheckCircle,
-  FileText
+  FileText,
+  TrendingUp
 } from 'lucide-react';
 
 export function Layout({ children, user, onLogout }) {
@@ -28,6 +29,7 @@ export function Layout({ children, user, onLogout }) {
     { label: 'Polls', path: '/dashboard', icon: <VoteIcon size={20} /> },
     { label: 'eAuction', path: '/eauction', icon: <Gavel size={20} /> },
     { label: 'Proposals', path: '/proposals', icon: <Lightbulb size={20} /> },
+    { label: 'Trending', path: '/trending', icon: <TrendingUp size={20} /> },
   ];
 
   return (
