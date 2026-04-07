@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, AlertCircle, Loader2, CheckCircle, Check } from 'lucide-react';
@@ -15,7 +16,7 @@ export default function CreateProposalModal({ isOpen, onClose, onSuccess, initia
 
   const { token } = useAuth();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       setTitle(initialData?.title || '');
       setDescription(initialData?.description || '');

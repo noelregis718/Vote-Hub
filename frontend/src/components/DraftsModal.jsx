@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { 
   X, Trash2, History, Loader2, ArrowRight, 

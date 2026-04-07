@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { 
   X, Plus, Minus, Send, AlertCircle, Loader2, Save, 
