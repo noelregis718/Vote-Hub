@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '@/lib/api';
 import { 
   X, Trash2, History, Loader2, ArrowRight, 
   PlusCircle, AlertCircle, Calendar 
@@ -17,9 +16,7 @@ export function DraftsModal({ isOpen, onClose, onSelectDraft }) {
   const fetchDrafts = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/drafts', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.get('/api/drafts');
       setDrafts(res.data);
     } catch (err) {
       setError("Failed to load drafts.");
@@ -37,9 +34,7 @@ export function DraftsModal({ isOpen, onClose, onSelectDraft }) {
   const deleteDraft = async (e, id) => {
     e.stopPropagation();
     try {
-      await axios.delete(`http://localhost:5000/api/drafts/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.delete(`/api/drafts/${id}`);
       setDrafts(drafts.filter(d => d.id !== id));
     } catch (err) {
       setError("Failed to delete draft.");

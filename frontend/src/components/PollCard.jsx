@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import api from '@/lib/api';
 import { useAuth } from '../context/AuthContext';
 import { CheckCircle2, Users, Calendar, Loader2, Edit, Trash2, Share2 } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -19,7 +18,7 @@ export function PollCard({ poll, onVoteSuccess, onEdit, onDelete, onShare }) {
 
     setIsVoting(true);
     try {
-      await axios.post(`http://localhost:5000/api/polls/${poll.id}/vote`, {
+      await api.post(`/api/polls/${poll.id}/vote`, {
         candidateId: selectedCandidate
       });
       setMessage('Vote recorded!');

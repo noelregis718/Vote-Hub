@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import api from '@/lib/api';
 import { useAuth } from '../context/AuthContext';
 import {
   Share2,
@@ -26,9 +25,7 @@ export function ProposalCard({ proposal, onSupportToggle, onEdit }) {
     if (!user) return;
     setIsUpdating(true);
     try {
-      await axios.post(`http://localhost:5000/api/proposals/${proposal.id}/support`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post(`/api/proposals/${proposal.id}/support`, {});
       onSupportToggle();
     } catch (err) {
       console.error("Failed to toggle support", err);

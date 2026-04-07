@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import api from '@/lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, AlertCircle, Loader2, CheckCircle, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -41,13 +40,9 @@ export default function CreateProposalModal({ isOpen, onClose, onSuccess, initia
       };
 
       if (initialData?.id) {
-        await axios.put(`http://localhost:5000/api/proposals/${initialData.id}`, payload, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await api.put(`/api/proposals/${initialData.id}`, payload);
       } else {
-        await axios.post('http://localhost:5000/api/proposals', payload, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await api.post('/api/proposals', payload);
       }
       
       setIsSuccess(true);

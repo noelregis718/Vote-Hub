@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '@/lib/api';
 
 const AuthContext = createContext();
 
@@ -16,7 +16,6 @@ export const AuthProvider = ({ children }) => {
     if (savedToken && savedUser) {
       setUser(savedUser);
       setToken(savedToken);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
     }
     setLoading(false);
   }, []);
@@ -24,7 +23,6 @@ export const AuthProvider = ({ children }) => {
   const setAuth = React.useCallback((userData, authToken) => {
     localStorage.setItem('token', authToken);
     localStorage.setItem('user', JSON.stringify(userData));
-    axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
     setUser(userData);
     setToken(authToken);
   }, []);
@@ -37,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Regular email/password login
-    const res = await axios.post('http://localhost:5000/api/auth/login', { 
+    const res = await api.post('/api/auth/login', { 
       email: emailOrUser, 
       password: passwordOrToken 
     });
@@ -47,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   }, [setAuth]);
 
   const register = React.useCallback(async (name, email, password) => {
-    const res = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+    const res = await api.post('/api/auth/register', { name, email, password });
     const { token, user: userData } = res.data;
     setAuth(userData, token);
     return userData;
@@ -56,8 +54,8 @@ export const AuthProvider = ({ children }) => {
   const logout = React.useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    delete axios.defaults.headers.common['Authorization'];
     setUser(null);
+    setToken(null);
   }, []);
 
   return (

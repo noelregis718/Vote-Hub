@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '@/lib/api';
 import { 
   TrendingUp, 
   Loader2, 
@@ -12,9 +12,6 @@ import {
   Activity
 } from 'lucide-react';
 
-// Backend Proxy URL
-const NEWS_PROXY_URL = 'http://localhost:5000/api/news';
-
 export default function Trending() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +22,7 @@ export default function Trending() {
     setError('');
     try {
       // Calling our own backend proxy for Alpha Vantage Sentiment News
-      const res = await axios.get(NEWS_PROXY_URL);
+      const res = await api.get('/api/news');
 
       if (res.data.status === 'success' && res.data.articles) {
         const normalized = (res.data.articles || []).map(item => {

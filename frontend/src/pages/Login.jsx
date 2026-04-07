@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, Loader2, AlertCircle } from 'lucide-react';
+import { API_URL } from '../lib/api';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -55,7 +56,7 @@ export default function Login() {
 
         <div className="space-y-5">
           <a
-            href="http://localhost:5000/api/auth/google"
+            href={`${API_URL}/api/auth/google`}
             className="w-full flex items-center justify-center space-x-4 p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all group relative overflow-hidden"
           >
             <svg className="w-6 h-6 relative z-10" viewBox="0 0 24 24">

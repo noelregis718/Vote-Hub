@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '@/lib/api';
 import { 
   X, Plus, Minus, Send, AlertCircle, Loader2, Save, 
   Calendar as CalendarIcon 
@@ -46,14 +45,12 @@ export function CreatePollModal({ isOpen, onClose, initialData = null, onPollCre
     if (!title && !description) return;
 
     try {
-      const res = await axios.post('http://localhost:5000/api/drafts', {
+      const res = await api.post('/api/drafts', {
         id: activeDraftId,
         title,
         description,
         candidates,
         endsAt
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
 
       if (onDraftSaved) onDraftSaved(res.data);
@@ -91,13 +88,11 @@ export function CreatePollModal({ isOpen, onClose, initialData = null, onPollCre
     setIsSubmitting(true);
     setError('');
     try {
-      await axios.post('http://localhost:5000/api/polls', {
+      await api.post('/api/polls', {
         title,
         description,
         candidates: candidates.filter(c => c.trim()),
         endsAt: endsAt || null
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
 
       if (onPollCreated) onPollCreated();

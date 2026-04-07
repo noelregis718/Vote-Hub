@@ -68,16 +68,28 @@ VoteHub follows a **Premium Monochrome** design system:
 ### Quick Setup
 
 1. **Environment Config**:
-   Create a `.env` in the `backend/` directory:
+   
+   **Frontend (.env)**:
+   ```env
+   # Backend production URL
+   VITE_API_URL="http://localhost:5000"
+   ```
+
+   **Backend (.env)**:
    ```env
    PORT=5000
    DATABASE_URL="postgresql://user:password@localhost:5432/votehub"
    JWT_SECRET="your_secure_hash"
    SESSION_SECRET="your_session_secret"
    
+   # Deployment Whitelist
+   # Your production frontend URL
+   FRONTEND_URL="http://localhost:5173"
+
    # Social Login
    GOOGLE_CLIENT_ID="your_google_client_id"
    GOOGLE_CLIENT_SECRET="your_google_client_secret"
+   GOOGLE_CALLBACK_URL="http://localhost:5000/api/auth/google/callback"
    
    # Market Intelligence
    ALPHAVANTAGE_KEY="your_alphavantage_api_key"

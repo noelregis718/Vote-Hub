@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '@/lib/api';
 import { PollCard } from '../components/PollCard';
 import { 
   Loader2, RefreshCcw, X, Plus, Trash2, 
@@ -39,7 +39,7 @@ export default function Dashboard() {
   const fetchPolls = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/polls');
+      const res = await api.get('/api/polls');
       setPolls(res.data);
     } catch (err) {
       setError('Failed to fetch polls. Please try again later.');
@@ -66,9 +66,7 @@ export default function Dashboard() {
   const handleDeletePoll = async (id) => {
     if (!window.confirm("Are you sure you want to delete this poll? This will delete all associated votes.")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/polls/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.delete(`/api/polls/${id}`);
       fetchPolls();
     } catch (err) {
       alert("Delete failed.");
@@ -89,9 +87,7 @@ export default function Dashboard() {
   const handleUpdatePoll = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/polls/${editingPoll.id}`, editData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.put(`/api/polls/${editingPoll.id}`, editData);
       setIsEditModalOpen(false);
       fetchPolls();
     } catch (err) {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Gavel, Clock, TrendingUp, Search, Filter, Plus, X, Upload, Calendar as CalendarIcon, Edit, Trash2, Share2 } from 'lucide-react';
+import api from '@/lib/api';
 import { useAuth } from '../context/AuthContext';
 import { DropdownMultiCalendar } from '../components/ui/dropdown-multi-calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
@@ -34,9 +35,8 @@ export default function EAuction() {
 
   const fetchAuctions = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/auctions');
-      const data = await res.json();
-      setAuctions(data);
+      const res = await api.get('/api/auctions');
+      setAuctions(res.data);
       setLoading(false);
     } catch (err) {
       console.error('Failed to fetch auctions');
@@ -69,19 +69,16 @@ export default function EAuction() {
 
     try {
       const endpoint = editingId
-        ? `http://localhost:5000/api/auctions/${editingId}`
-        : 'http://localhost:5000/api/auctions';
+        ? `/api/auctions/${editingId}`
+        : '/api/auctions';
 
-      const res = await fetch(endpoint, {
+      const res = await api({
         method: editingId ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(newAuction)
+        url: endpoint,
+        data: newAuction
       });
 
-      if (res.ok) {
+      if (res.status === 200 || res.status === 201) {
         setShowCreateModal(false);
         setEditingId(null);
         fetchAuctions();
@@ -99,11 +96,8 @@ export default function EAuction() {
   const handleDeleteAuction = async (id) => {
     if (!window.confirm("Are you sure?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/auctions/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.ok) fetchAuctions();
+      const res = await api.delete(`/api/auctions/${id}`);
+      if (res.status === 200) fetchAuctions();
     } catch (err) {
       alert("Network error.");
     }
@@ -134,12 +128,8 @@ export default function EAuction() {
     if (Number(bidAmount) <= biddingItem.currentBid) return alert(`Min. bid is ₹${biddingItem.currentBid + 1}`);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/auctions/${biddingItem.id}/bid`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ amount: bidAmount })
-      });
-      if (res.ok) {
+      const res = await api.post(`/api/auctions/${biddingItem.id}/bid`, { amount: bidAmount });
+      if (res.status === 200 || res.status === 201) {
         setShowBidModal(false);
         fetchAuctions();
       } else {

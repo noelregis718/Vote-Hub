@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:5000/api/auth/google/callback"
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || "http://localhost:5000/api/auth/google/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
@@ -127,7 +127,7 @@ router.post('/login', async (req, res) => {
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/google/callback', 
-  passport.authenticate('google', { failureRedirect: 'http://localhost:5173/login' }),
+  passport.authenticate('google', { failureRedirect: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/login` }),
   (req, res) => {
     const token = jwt.sign({ id: req.user.id, role: req.user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
     const user = encodeURIComponent(JSON.stringify({
@@ -136,7 +136,7 @@ router.get('/google/callback',
       name: req.user.name,
       avatar: req.user.avatar
     }));
-    res.redirect(`http://localhost:5173/auth-success?token=${token}&user=${user}`);
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/auth-success?token=${token}&user=${user}`);
   }
 );
 
