@@ -13,8 +13,6 @@ import {
 } from 'lucide-react';
 import { 
   GitHubLogoIcon, 
-  TwitterLogoIcon, 
-  InstagramLogoIcon,
   EnvelopeClosedIcon
 } from '@radix-ui/react-icons';
 import { Footer } from '@/components/ui/footer';
@@ -242,19 +240,9 @@ export default function Contact() {
         brandName="VoteHub"
         socialLinks={[
           {
-            icon: <TwitterLogoIcon className="h-5 w-5" />,
-            href: "https://twitter.com/votehub",
-            label: "Twitter",
-          },
-          {
             icon: <GitHubLogoIcon className="h-5 w-5" />,
             href: "https://github.com/votehub/core",
             label: "GitHub",
-          },
-          {
-            icon: <InstagramLogoIcon className="h-5 w-5" />,
-            href: "https://instagram.com/votehub",
-            label: "Instagram",
           },
           {
             icon: <EnvelopeClosedIcon className="h-5 w-5" />,
@@ -263,16 +251,11 @@ export default function Contact() {
           },
         ]}
         mainLinks={[
-          { href: "/polls", label: "Browse Polls" },
-          { href: "/auctions", label: "eAuctions" },
           { href: "/contact", label: "Contact Page" },
-          { href: "/community", label: "Communities" },
-        ]}
-        legalLinks={[
           { href: "/privacy", label: "Privacy Policy" },
           { href: "/terms", label: "Terms of Service" },
-          { href: "/cookies", label: "Cookie Policy" },
         ]}
+        legalLinks={[]}
         copyright={{
           text: `© ${new Date().getFullYear()} VoteHub Ecosystem`,
           license: "Licensed under ISC Premium",
