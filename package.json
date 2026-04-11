@@ -19,7 +19,7 @@
     "node"
   ],
   "author": "noelregis718",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.2"
   }
